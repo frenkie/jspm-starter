@@ -1,0 +1,40 @@
+{
+  "name": "jspm-starter",
+  "description": "A basic website/app template using JSPM and SASS",
+  "version": "0.1.0",
+  "devDependencies": {
+    "http-server": "^0.9.0",
+    "jspm": "^0.16.34",
+    "mustang": "github:vpro/mustang",
+    "node-sass": "^3.7.0",
+    "nodemon": "^1.9.2",
+    "rimraf": "^2.5.2"
+  },
+  "jspm": {
+    "configFile": "systemjs.config.js",
+    "devDependencies": {
+      "babel": "npm:babel-core@~5.8.24",
+      "babel-runtime": "npm:babel-runtime@^5.8.24",
+      "core-js": "npm:core-js@^1.1.4"
+    }
+  },
+  "scripts": {
+    "postinstall": "jspm install",
+    "prebuild:dev": "rimraf dev/ && mkdir dev",
+    "build:dev": "npm run html:dev && npm run css:dev && npm run script:dev",
+    "css:dev": "node-sass src/sass/style.scss --output dev/css",
+    "html:dev": "mustang -j '{\"dev\":true}' -t src/index.tmpl -o dev/index.html",
+    "script:dev": "cp -r src/js dev/",
+    "watch:dev": "nodemon --watch src/ -e js,scss,tmpl --exec npm run build:dev",
+    "predev": "npm run build:dev",
+    "dev": "http-server -p 9090",
+    "prebuild:prod": "rimraf dist/ && mkdir dist",
+    "build:prod": "npm run html:prod && npm run css:prod && npm run script:prod",
+    "css:prod": "node-sass src/sass/style.scss --output dist/css",
+    "html:prod": "mustang -j '{\"dev\":false}' -t src/index.tmpl -o dist/index.html",
+    "script:prod": "jspm bundle-sfx src/js/impl.js dist/js/impl.sfx.js",
+    "watch:prod": "nodemon --watch src/ --exec npm run build:prod",
+    "preprod": "npm run build:prod",
+    "prod": "http-server dist/ -p 9090"
+  }
+}
